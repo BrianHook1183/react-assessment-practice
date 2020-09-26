@@ -1,26 +1,65 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, Fragment } from 'react';
+import ContactCard from './ContactCard';
+import NameForm from './NameForm';
+import GrandChildNeedsContext from './GrandChildNeedsContext';
+import NewNameForm from './NewNameForm';
+import NameContext from './NameContext';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fName: 'Brian',
+      lName: 'Hook'
+    }
+  }
+
+  updateName(fname, lname) {
+    this.setState({
+      fName: fname,
+      lName: lname
+    })
+  }
+
+  addNewName(fname, lname) {
+    this.setState({
+      fnanme2: fname,
+      lname2: lname
+    })
+  }
+
+  handleFormSubmit = (event) => {
+    event.preventDefault();
+    const { firstName, lastName } = event.target;
+    this.updateName(firstName.value, lastName.value);
+  }
+
+  handleNewFormSubmit = (event) => {
+    event.preventDefault();
+    console.log('handleNewFormSubmit ran', event.target);
+    const fname = event.target.fname.value;
+    const lname = event.target.lname.value;
+    this.addNewName(fname, lname);
+  }
+
+  render() {
+    const { fName, lName } = this.state;
+    const contextValue = {
+      firstName: fName,
+      lastName: lName
+    }
+    return (
+      <Fragment>
+        <h1>The App is here</h1>
+        <ContactCard name={this.state} />
+        <NameForm handleSubmit={this.handleFormSubmit} />
+        <NameContext.Provider value={contextValue}>
+          <GrandChildNeedsContext />
+        </NameContext.Provider>
+        <NewNameForm handleSubmit={this.handleNewFormSubmit} />
+      </Fragment>
+    );
+  }
 }
 
 export default App;
